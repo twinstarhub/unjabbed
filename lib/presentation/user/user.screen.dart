@@ -3,16 +3,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:unjabbed_admin/domain/core/interfaces/widget/loading.dart';
 import 'package:unjabbed_admin/domain/core/model/CustomDuration.dart';
 import '../../domain/core/interfaces/widget/drawer.dart';
+import '../../domain/core/show_alert.dart';
 import '../../infrastructure/dal/util/Global.dart';
 import '../../infrastructure/dal/util/general.dart';
 import 'controllers/user.controller.dart';
 
 class UserScreen extends GetView<UserController> {
   const UserScreen({Key? key}) : super(key: key);
-
+  
   @override
   Widget build(BuildContext context) {
     Get.put(UserController());
@@ -24,52 +26,7 @@ class UserScreen extends GetView<UserController> {
       }
       return Obx(
         () => Scaffold(
-          drawer: drawer(context),
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              "Users",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  height: 4,
-                  width: isLargeScreen ? Get.width * .3 : Get.width * .5,
-                  child: Card(
-                    child: TextFormField(
-                      cursorColor: Theme.of(context).primaryColor,
-                      controller: controller.searchController,
-                      decoration: InputDecoration(
-                          hintText: "Search by name or phone number",
-                          filled: true,
-                          prefixIcon: IconButton(
-                            icon: Icon(Icons.search),
-                            onPressed: () => controller.searchFirstUser(
-                              (controller.searchController?.text ?? ""),
-                            ),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(Icons.clear),
-                            onPressed: () {
-                              controller.searchController?.clear();
-                              controller.searchFirstUser("");
-                            },
-                          )),
-                      onFieldSubmitted: (String value) {
-                        controller.searchFirstUser(
-                          value,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          drawer: drawer(context,controller.controller),
           body: !controller.isLoading.value ? listUserWidget() : loadingWidget(null, null),
         ),
       );
@@ -200,6 +157,40 @@ class UserScreen extends GetView<UserController> {
                             .toList(),
                       ),
                     ),
+                    Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Container(
+                  height: 50,
+                  width: isLargeScreen ? Get.width * .3 : Get.width * .5,
+                  child: Card(
+                    child: TextFormField(
+                      cursorColor: Theme.of(Get.context!).primaryColor,
+                      controller: controller.searchController,
+                      decoration: InputDecoration(
+                          hintText: "Search by name or phone number",
+                          filled: true,
+                          prefixIcon: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () => controller.searchFirstUser(
+                              (controller.searchController?.text ?? ""),
+                            ),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.clear),
+                            onPressed: () {
+                              controller.searchController?.clear();
+                              controller.searchFirstUser("");
+                            },
+                          )),
+                      onFieldSubmitted: (String value) {
+                        controller.searchFirstUser(
+                          value,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
                   ],
                 ),
               );
@@ -228,8 +219,8 @@ class UserScreen extends GetView<UserController> {
                       controller.onSortColum(columnIndex, ascending);
                     },
                   ),
-                  DataColumn(label: Text("Phone Number")),
-                  DataColumn(label: Text("User_id")),
+                  DataColumn(label: Text("Country")),
+                  DataColumn(label: Text("Created at")),
                   DataColumn(label: Text("view")),
                   DataColumn(
                     label: Text("Action"),
@@ -269,6 +260,7 @@ class UserScreen extends GetView<UserController> {
                               ),
                             ),
                             onTap: () {
+                              ShowAlert.image(Get.context!, image: index.imageUrl[0]['url']);
                               // Get.find<UserController>()
                               //     .initDetailUser(userIndex: index);
                               // print("Test");
@@ -304,7 +296,7 @@ class UserScreen extends GetView<UserController> {
                           Text(index.gender),
                         ),
                         DataCell(
-                          Text(index.phoneNumber),
+                          Text(index.countryName),
                         ),
                         DataCell(
                           Row(
@@ -312,7 +304,7 @@ class UserScreen extends GetView<UserController> {
                               Container(
                                 width: 150,
                                 child: Text(
-                                  index.id,
+                                  DateFormat.MMMd('en_US').add_jm().format(index.createdAt ?? DateTime.now()).toString(),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),

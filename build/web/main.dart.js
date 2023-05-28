@@ -47761,7 +47761,7 @@ H(a){return A.bI(null,null,1/a.N(t.w).f.b)}}
 A.Mz.prototype={
 H(a){var s,r=a.N(t.w).f,q=r.f,p=q.b+8,o=this.c,n=o.b,m=n>=p+8+43,l=26+q.a,k=r.a.a-q.c-26,j=new A.k(A.M(o.a,l,k),n-8-p)
 n=this.d
-s=new A.k(A.M(n.a,l,k),n.b-8+p)
+s=new A.k(A.M(n.a,l,k),n.b+8-p)
 q=m?j:s
 return new A.bA(new A.a6(8,p,8,8),new A.i5(new A.Tx(j,s,m),new A.Gb(q,A.aRU(this.e),m,A.b0P(),null),null),null)}}
 A.VF.prototype={
@@ -91764,8 +91764,8 @@ l=A.jh(l)
 l.toString
 s=3
 return A.Q(p.a.f2(0,l,m),$async$qL)
-case 3:if(a===2)q.r1(b,"Your verification has been rejected","Verification Rejected")
-if(a===3)q.r1(b,"Congratulations! Your verification has been approved!","Verification Approve")
+case 3:if(a===2)q.r1(b,c,"Verification Rejected")
+if(a===3)q.r1(b,"Congratulations! You have been verified. Your profile should now display a green circle with a tick signifying your verification status.","Verification Approve")
 q.cx.sq(0,0)
 q.fY()
 return A.H(null,r)}})

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unjabbed_admin/infrastructure/dal/util/general.dart';
+import 'package:unjabbed_admin/presentation/user/detail/vinculo_model.dart';
 import '../../../../domain/core/model/user_model.dart';
 import '../../../../infrastructure/dal/services/fcm_service.dart';
 import '../../../../infrastructure/dal/util/Global.dart';
@@ -11,6 +12,8 @@ class UserDetailController extends GetxController {
   RxBool isLoading = false.obs;
   TextEditingController? title;
   TextEditingController? content;
+  Vinculo? titleText;
+  Vinculo? bodyText;
   Rxn<UserModel> selectedUser = Rxn();
 
   @override

@@ -14,18 +14,19 @@ class ItemaccessScreen extends GetView<ItemaccessController> {
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    Get.put(ItemaccessController()); 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "Subscription settings",
-          style: TextStyle(
-            fontWeight: FontWeight.w300,
-            fontSize: 25,
-            color: Colors.white,
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: Text(
+      //     "Subscription settings",
+      //     style: TextStyle(
+      //       fontWeight: FontWeight.w300,
+      //       fontSize: 25,
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      // ),
       body: OrientationBuilder(
         builder: (context, orientation) {
           if (Get.width > 600) {
@@ -38,6 +39,11 @@ class ItemaccessScreen extends GetView<ItemaccessController> {
                 ? loadingWidget(null, null)
                 : Stack(
                     children: [
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: Text("Subscription settings",style: TextStyle(fontSize: 20),),
+                      ),
                       Positioned(
                         top: 10,
                         right: 10,

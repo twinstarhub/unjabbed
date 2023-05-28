@@ -9,11 +9,8 @@ class AuthChangePasswordScreen extends GetView<AuthChangePasswordController> {
   const AuthChangePasswordScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Get.put(AuthChangePasswordController()); 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Change Id or Password"),
-      ),
       body: OrientationBuilder(
         builder: (context, orientation) {
           if (Get.width > 600) {

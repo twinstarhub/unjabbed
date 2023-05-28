@@ -26,25 +26,39 @@ class UserReviewScreen extends GetView<UserReviewController> {
             isLargeScreen = false;
           }
           return Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                onPressed: () {
-                  Get.offAllNamed(Routes.USER);
-                },
-                icon: Icon(Icons.arrow_back_ios_new),
-              ),
-              centerTitle: true,
-              title: Text(
-                "Review Users",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              actions: [
-                Padding(
+            // appBar: AppBar(
+            //   leading: IconButton(
+            //     onPressed: () {
+            //       Get.offAllNamed(Routes.USER);
+            //     },
+            //     icon: Icon(Icons.arrow_back_ios_new),
+            //   ),
+            //   centerTitle: true,
+            //   title: Text(
+            //     "Review Users",
+            //     style: TextStyle(
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            //   actions: [
+                
+            //   ],
+            // ),
+            body: !controller.isLoading.value
+                ? Column(
+                  children: [
+                    
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text("Review Users",style: TextStyle(fontSize: 20),),
+                      ),
+                        Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
-                    height: 4,
+                    height: 50,
                     width: isLargeScreen ? Get.width * .3 : Get.width * .5,
                     child: Card(
                       child: TextFormField(
@@ -72,10 +86,11 @@ class UserReviewScreen extends GetView<UserReviewController> {
                     ),
                   ),
                 ),
-              ],
-            ),
-            body: !controller.isLoading.value
-                ? listReviewWidget()
+                      ],
+                    ),
+                    Expanded(child: listReviewWidget()),
+                  ],
+                )
                 : loadingWidget(null, null),
           );
         },

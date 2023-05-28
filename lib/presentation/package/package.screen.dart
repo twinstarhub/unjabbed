@@ -14,32 +14,40 @@ class PackageScreen extends GetView<PackageController> {
     Get.put(PackageController());
     return Obx(
       () => Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Manage Packages"),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                child: ElevatedButton.icon(
-                  icon: Icon(
-                    Icons.add,
-                    color: Theme.of(context).primaryColor,
-                    textDirection: TextDirection.rtl,
-                  ),
-                  label: Text("Create new"),
-                  onPressed: () async {
-                    controller.initAddOrCreatePackage(null);
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
         body: controller.listPackages.isNotEmpty
-            ? productlist()
+            ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text("Manage Packages",style: TextStyle(fontSize: 20),),
+                    ),
+                    Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  child: ElevatedButton.icon(
+                    icon: Icon(
+                      Icons.add,
+                      color: Theme.of(context).primaryColor,
+                      textDirection: TextDirection.rtl,
+                    ),
+                    label: Text("Create new"),
+                    onPressed: () async {
+                      controller.initAddOrCreatePackage(null);
+                    },
+                  ),
+                              ),
+                            ),
+                  ],
+                ),
+                Expanded(child: productlist()),
+              ],
+            )
             : Center(
                 child: Image.asset("assets/images/empty.png"),
               ),

@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unjabbed_admin/domain/core/model/user_model.dart';
 import 'package:unjabbed_admin/infrastructure/dal/util/Global.dart';
+import 'package:unjabbed_admin/presentation/user/detail/vinculo_model.dart';
 
 import '../../../domain/core/interfaces/widget/alert.dart';
 import '../../../domain/core/interfaces/widget/loading.dart';
+import '../../../domain/core/show_alert.dart';
 import '../../../infrastructure/dal/util/general.dart';
 import '../../../infrastructure/navigation/routes.dart';
 import '../controllers/user.controller.dart';
 import 'controllers/user_detail.controller.dart';
+import 'custom_dropdown_widget.dart';
 
 class UserDetailScreen extends GetView<UserDetailController> {
   const UserDetailScreen({Key? key}) : super(key: key);
@@ -196,32 +199,53 @@ class UserDetailScreen extends GetView<UserDetailController> {
                                                   controller.selectedUser.value
                                                           ?.imageUrl[index] !=
                                                       null
-                                              ? Container(
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: NetworkImage(
-                                                        (controller
-                                                                    .selectedUser
-                                                                    .value
-                                                                    ?.imageUrl[
-                                                                        0]
-                                                                    .runtimeType ==
-                                                                String)
-                                                            ? controller
-                                                                    .selectedUser
-                                                                    .value
-                                                                    ?.imageUrl[
-                                                                index]
-                                                            : controller
-                                                                    .selectedUser
-                                                                    .value
-                                                                    ?.imageUrl[
-                                                                index]['url'],
+                                              ? InkWell(
+                                                onTap: (){
+                                                  ShowAlert.image(Get.context!, image: (controller
+                                                                      .selectedUser
+                                                                      .value
+                                                                      ?.imageUrl[
+                                                                          0]
+                                                                      .runtimeType ==
+                                                                  String)
+                                                              ? controller
+                                                                      .selectedUser
+                                                                      .value
+                                                                      ?.imageUrl[
+                                                                  index]
+                                                              : controller
+                                                                      .selectedUser
+                                                                      .value
+                                                                      ?.imageUrl[
+                                                                  index]['url']);
+                                                },
+                                                child: Container(
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: NetworkImage(
+                                                          (controller
+                                                                      .selectedUser
+                                                                      .value
+                                                                      ?.imageUrl[
+                                                                          0]
+                                                                      .runtimeType ==
+                                                                  String)
+                                                              ? controller
+                                                                      .selectedUser
+                                                                      .value
+                                                                      ?.imageUrl[
+                                                                  index]
+                                                              : controller
+                                                                      .selectedUser
+                                                                      .value
+                                                                      ?.imageUrl[
+                                                                  index]['url'],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                )
+                                              )
                                               : Container(),
                                         ],
                                       ),
@@ -299,44 +323,29 @@ class UserDetailScreen extends GetView<UserDetailController> {
                             ),
                             ListTile(
                               dense: true,
-                              title: Text("University"),
+                              title: Text("Sexual Orientation"),
                               subtitle: Text(controller
-                                  .selectedUser.value?.editInfo?['university']),
+                                  .selectedUser.value?.sexualOrientation??'--'),
                             ),
                             ListTile(
                               dense: true,
-                              title: Text("Job title"),
+                              title: Text("I am looking for"),
                               subtitle: Text(
-                                controller.selectedUser.value
-                                            ?.editInfo?["job_title"] !=
-                                        null
-                                    ? controller.selectedUser.value
-                                        ?.editInfo!["job_title"]
-                                    : "----",
+                                controller.selectedUser.value?.interest.join(', ')??'---',
                               ),
                             ),
                             ListTile(
                               dense: true,
-                              title: Text("Company"),
+                              title: Text("Status"),
                               subtitle: Text(
-                                controller.selectedUser.value
-                                            ?.editInfo?["company"] !=
-                                        null
-                                    ? controller.selectedUser.value
-                                        ?.editInfo!["company"]
-                                    : "----",
+                                controller.selectedUser.value?.status?? "----",
                               ),
                             ),
                             ListTile(
                               dense: true,
-                              title: Text("Living in"),
+                              title: Text("Kink & desires"),
                               subtitle: Text(
-                                controller.selectedUser.value
-                                            ?.editInfo?["living_in"] !=
-                                        null
-                                    ? controller.selectedUser.value
-                                        ?.editInfo!["living_in"]
-                                    : "----",
+                                '${controller.selectedUser.value?.kinks.join(', ')}${controller.selectedUser.value?.desires.join(', ')}',
                               ),
                             ),
                             ListTile(
@@ -378,23 +387,34 @@ class UserDetailScreen extends GetView<UserDetailController> {
           SizedBox(
             height: 6,
           ),
-          TextField(
-            controller: controller.title,
-            style: TextStyle(fontSize: 20),
-            maxLines: 1,
-            decoration: new InputDecoration(
-              border: new OutlineInputBorder(
-                  borderSide: new BorderSide(color: Colors.teal)),
-              hintText: 'Title',
-              prefixIcon: const Icon(
-                Icons.title,
-                color: Colors.green,
-              ),
-              prefixText: ' ',
-              // suffixText: 'USD',
-              suffixStyle: const TextStyle(color: Colors.green),
-            ),
+          CustomDropDownWidget(
+            withSearch: true,
+            value: controller.titleText,
+            onChange: (Vinculo value){
+              controller.titleText=value;
+              controller.content?.text=value.value;
+              controller.update();
+            },
+            textEditingController: controller.title!,
+            lista: vinculoList,
           ),
+          // TextField(
+          //   controller: controller.title,
+          //   style: TextStyle(fontSize: 20),
+          //   maxLines: 1,
+          //   decoration: new InputDecoration(
+          //     border: new OutlineInputBorder(
+          //         borderSide: new BorderSide(color: Colors.teal)),
+          //     hintText: 'Title',
+          //     prefixIcon: const Icon(
+          //       Icons.title,
+          //       color: Colors.green,
+          //     ),
+          //     prefixText: ' ',
+          //     // suffixText: 'USD',
+          //     suffixStyle: const TextStyle(color: Colors.green),
+          //   ),
+          // ),
           SizedBox(
             height: 10,
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:unjabbed_admin/presentation/user/home_screen.dart';
 
 import '../../config.dart';
 import '../../presentation/screens.dart';
@@ -38,7 +39,7 @@ class Nav {
     ),
     GetPage(
       name: Routes.USER,
-      page: () => const UserScreen(),
+      page: () => const HomeScreen(),
       binding: UserControllerBinding(),
     ),
     GetPage(

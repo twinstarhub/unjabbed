@@ -23,50 +23,54 @@ class VerifyScreen extends GetView<VerifyController> {
         }
         return Scaffold(
           // drawer: drawer(context),
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              "Users",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  height: 4,
-                  width: isLargeScreen ? Get.width * .3 : Get.width * .5,
-                  child: Card(
-                    child: TextFormField(
-                      cursorColor: Theme.of(context).primaryColor,
-                      controller: controller.searchctrlr,
-                      decoration: InputDecoration(
-                        hintText: "Search by name or phone number",
-                        filled: true,
-                        prefixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () => controller.searchFirstVerify(
-                            controller.searchctrlr?.text ?? "",
+          body: !controller.isLoading.value
+              ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text("Verify Users",style: TextStyle(fontSize: 20),),
+                      ),
+                      Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Container(
+                        height: 50,
+                        width: isLargeScreen ? Get.width * .3 : Get.width * .5,
+                        child: Card(
+                          child: TextFormField(
+                            cursorColor: Theme.of(context).primaryColor,
+                            controller: controller.searchctrlr,
+                            decoration: InputDecoration(
+                              hintText: "Search by name or phone number",
+                              filled: true,
+                              prefixIcon: IconButton(
+                                icon: Icon(Icons.search),
+                                onPressed: () => controller.searchFirstVerify(
+                                  controller.searchctrlr?.text ?? "",
+                                ),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.clear),
+                                onPressed: () {
+                                  controller.searchctrlr?.clear();
+                                  controller.searchFirstVerify("");
+                                },
+                              ),
+                            ),
+                            onFieldSubmitted: controller.searchFirstVerify,
                           ),
                         ),
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.clear),
-                          onPressed: () {
-                            controller.searchctrlr?.clear();
-                            controller.searchFirstVerify("");
-                          },
-                        ),
                       ),
-                      onFieldSubmitted: controller.searchFirstVerify,
-                    ),
+                    )
+                    ],
                   ),
-                ),
-              ),
-            ],
-          ),
-          body: !controller.isLoading.value
-              ? listVerifyUserWidget()
+                  Expanded(
+                    child: listVerifyUserWidget()),
+                ],
+              )
               : loadingWidget(null, null),
         );
       },

@@ -344,48 +344,62 @@ class _UserReportScreen extends State<UserReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "Reported Users List",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          Padding(
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: Text(
+      //     "Reported Users List",
+      //     style: TextStyle(
+      //       fontWeight: FontWeight.bold,
+      //     ),
+      //   ),
+      //   actions: [
+          
+      //   ],
+      // ),
+      body:
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text("Reported Users List",style: TextStyle(fontSize: 20),),
+                      ),
+                  Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Container(
-              height: 4,
-              width: MediaQuery.of(context).size.width * .3,
-              child: Card(
-                child: TextFormField(
-                  cursorColor: Theme.of(context).primaryColor,
-                  controller: searchctrlr,
-                  decoration: InputDecoration(
-                      hintText: "Search by name or phone number",
-                      filled: true,
-                      prefixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          onPressed: () => searchuser(searchctrlr.text)),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () {
-                          searchctrlr.clear();
-                          setState(() {
-                            searchReasultfuture = null;
-                          });
-                        },
-                      )),
-                  onFieldSubmitted: searchuser,
-                ),
-              ),
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * .3,
+                  child: Card(
+                    child: TextFormField(
+                      cursorColor: Theme.of(context).primaryColor,
+                      controller: searchctrlr,
+                      decoration: InputDecoration(
+                          hintText: "Search by name or phone number",
+                          filled: true,
+                          prefixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () => searchuser(searchctrlr.text)),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.clear),
+                            onPressed: () {
+                              searchctrlr.clear();
+                              setState(() {
+                                searchReasultfuture = null;
+                              });
+                            },
+                          )),
+                      onFieldSubmitted: searchuser,
+                    ),
+                  ),
             ),
           ),
-        ],
-      ),
-      body:
-          searchReasultfuture == null ? userlists(user) : buildSearchresults(),
+                ],
+              ),
+              Expanded(child: searchReasultfuture == null ? userlists(user) : buildSearchresults()),
+            ],
+          ),
     );
   }
 }

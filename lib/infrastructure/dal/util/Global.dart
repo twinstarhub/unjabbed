@@ -17,12 +17,15 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../domain/core/interfaces/widget/alert.dart';
 // import '../../../domain/core/model/Relationship.dart';
 // import '../../../domain/core/model/ReviewModel.dart';
+import '../../../presentation/user/detail/custom_dropdown_widget.dart';
+import '../../../presentation/user/detail/vinculo_model.dart';
 import '../../navigation/routes.dart';
 import 'color.dart';
 import 'general.dart';
 
 class Global {
   static String font = "Arial";
+  Vinculo? titleText;
   // ImagePicker imagePicker = ImagePicker();
   String readTimestamp(int timestamp) {
     var now = new DateTime.now();
@@ -236,19 +239,29 @@ class Global {
           ),
           SizedBox(height: 20),
           Container(
-            padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
             width: 300,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: Colors.red),
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                labelText: "Reason",
-              ),
-              controller: reason,
-            ),
+            child: CustomDropDownWidget(
+            withSearch: true,
+            valueVinculo: true,
+            title: 'Reason',
+            maxLines: null,
+            value: titleText,
+            onChange: (Vinculo value){
+              titleText=value;
+              reason.text=value.value;
+              // controller.content?.text=value.value;
+              // controller.update();
+            },
+            textEditingController: reason,
+            lista: vinculoList,
+          ),
+          //  TextField(
+          //     decoration: InputDecoration(
+          //       border: InputBorder.none,
+          //       labelText: "Reason",
+          //     ),
+          //     controller: reason,
+          //   ),
           ),
           SizedBox(height: 15),
         ],

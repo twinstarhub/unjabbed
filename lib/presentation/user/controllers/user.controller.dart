@@ -17,6 +17,7 @@ class UserController extends GetxController {
   RxList<UserModel> listUserSearchAll = RxList();
   RxList<UserModel> listUser = RxList();
   TextEditingController? searchController;
+  final PageController controller=PageController();
   TextEditingController? title;
   TextEditingController? content;
   RxInt documentLimit = 25.obs;
