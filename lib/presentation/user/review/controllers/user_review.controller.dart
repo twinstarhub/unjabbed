@@ -8,6 +8,8 @@ import '../../../../domain/core/model/ReviewModel.dart';
 import '../../../../infrastructure/dal/services/fcm_service.dart';
 import '../../../../infrastructure/dal/util/Global.dart';
 import '../../../../infrastructure/dal/util/general.dart';
+import '../../detail/custom_dropdown_widget.dart';
+import '../../detail/vinculo_model.dart';
 
 class UserReviewController extends GetxController {
   TextEditingController? searchctrlr;
@@ -23,6 +25,7 @@ class UserReviewController extends GetxController {
   String tempQuery = "";
   RxInt start = 0.obs;
   RxInt end = 0.obs;
+  Vinculo? valueTitle;
 
   @override
   void onInit() {
@@ -188,16 +191,30 @@ class UserReviewController extends GetxController {
           Container(
             width: 300,
             padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.red)),
-            child: TextField(
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                labelText: "Reason",
-              ),
-              controller: reason,
-            ),
+            // decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(5),
+            //     border: Border.all(color: Colors.red)),
+            child:CustomDropDownWidget(
+                        withSearch: true,
+                        valueVinculo: true,
+                        title: 'Reason',
+                        maxLines: null,
+                        value: valueTitle,
+                        onChange: (Vinculo value){
+                          valueTitle=value;
+                          // content?.text=value.value;
+                          // update();
+                        },
+                        textEditingController: reason,
+                        lista: vinculoList,
+                      ), 
+            //           TextField(
+            //   decoration: InputDecoration(
+            //     border: InputBorder.none,
+            //     labelText: "Reason",
+            //   ),
+            //   controller: reason,
+            // ),
           ),
           SizedBox(height: 15),
         ],

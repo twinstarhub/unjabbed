@@ -49,12 +49,27 @@ Widget drawer(BuildContext context, PageController controller) {
             ),
             ListTile(
               trailing: Icon(
+                Icons.play_arrow,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text('VIDEOS'),
+              onTap: () {
+                controller.jumpToPage(1);
+                Scaffold.of(context).closeDrawer();
+              },
+            ),
+            Divider(
+              thickness: .5,
+              color: Colors.black,
+            ),
+            ListTile(
+              trailing: Icon(
                 Icons.format_list_numbered,
                 color: Theme.of(context).primaryColor,
               ),
               title: Text('PACKAGES'),
               onTap: () {
-                controller.jumpToPage(1);
+                controller.jumpToPage(2);
                 Scaffold.of(context).closeDrawer();
               },
             ),
@@ -69,7 +84,7 @@ Widget drawer(BuildContext context, PageController controller) {
               ),
               title: Text('ITEM ACCESS'),
               onTap: () {
-                controller.jumpToPage(2);
+                controller.jumpToPage(3);
                 Scaffold.of(context).closeDrawer();
               },
             ),
@@ -84,7 +99,7 @@ Widget drawer(BuildContext context, PageController controller) {
               ),
               title: Text('CHANGE ID/PASSWORD'),
               onTap: () {
-                controller.jumpToPage(3);
+                controller.jumpToPage(4);
                 Scaffold.of(context).closeDrawer();
               },
             ),
@@ -99,7 +114,7 @@ Widget drawer(BuildContext context, PageController controller) {
               ),
               title: Text('VERIFY USER'),
               onTap: () {
-                controller.jumpToPage(4);
+                controller.jumpToPage(5);
                 Scaffold.of(context).closeDrawer();
               },
             ),
@@ -114,7 +129,7 @@ Widget drawer(BuildContext context, PageController controller) {
               ),
               title: Text('REPORTED USER'),
               onTap: () {
-                controller.jumpToPage(5);
+                controller.jumpToPage(6);
                 Scaffold.of(context).closeDrawer();
               },
             ),
@@ -129,7 +144,7 @@ Widget drawer(BuildContext context, PageController controller) {
               ),
               title: Text('REVIEW USER'),
               onTap: () {
-                controller.jumpToPage(6);
+                controller.jumpToPage(7);
                 Scaffold.of(context).closeDrawer();
               },
             ),

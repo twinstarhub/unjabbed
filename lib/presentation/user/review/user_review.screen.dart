@@ -273,6 +273,8 @@ class UserReviewScreen extends GetView<UserReviewController> {
       if (suspendModel.status?.value == "suspend") {
         return InkWell(
           onTap: () {
+            controller.valueTitle=null;
+            // controller.rea
             controller.updateSuspendWidget("unsuspend", suspendModel);
           },
           child: Container(

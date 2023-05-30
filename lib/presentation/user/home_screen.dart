@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unjabbed_admin/presentation/user/tutorial_screen.dart';
 import 'package:unjabbed_admin/presentation/user/user.screen.dart';
 import '../../domain/core/interfaces/widget/drawer.dart';
 import '../package/package.screen.dart';
@@ -33,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               controller: controller,
               children:  [
                 UserScreen(),
+                TutorialScreen(),
                 PackageScreen(),
                 ItemaccessScreen(),
                 AuthChangePasswordScreen(),
@@ -49,5 +51,6 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   bool get wantKeepAlive => true;
 }
+
 
 

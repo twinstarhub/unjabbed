@@ -11,6 +11,8 @@ import 'package:unjabbed_admin/infrastructure/dal/util/general.dart';
 import '../../../domain/core/model/user_model.dart';
 import '../../../infrastructure/dal/services/fcm_service.dart';
 import '../../../infrastructure/navigation/routes.dart';
+import '../detail/custom_dropdown_widget.dart';
+import '../detail/vinculo_model.dart';
 
 class UserController extends GetxController {
   RxList<UserModel> listUserAll = RxList();
@@ -22,6 +24,7 @@ class UserController extends GetxController {
   TextEditingController? content;
   RxInt documentLimit = 25.obs;
   RxInt totalDoc = 0.obs;
+  Vinculo? valueTitle;
   RxInt totalDocSearch = 0.obs;
   RxBool isSearch = false.obs;
   RxBool isLoading = false.obs;
@@ -43,6 +46,7 @@ class UserController extends GetxController {
       Global().showInfoDialog("Deleted");
       listUserAll.removeWhere((element) => element.id == userIndex.id);
       listUser.removeWhere((element) => element.id == userIndex.id);
+      listUser.sort((a, b) => (b.createdAt??DateTime.now()).compareTo(a.createdAt??DateTime.now()));
       if (isSearch.value) {
         listUserSearchAll.removeWhere((element) => element.id == userIndex.id);
       }
@@ -129,12 +133,14 @@ class UserController extends GetxController {
         start.value = start.value - documentLimit.value;
       }
     }
+    listUserAll.sort((a, b) => (b.createdAt??DateTime.now()).compareTo(a.createdAt??DateTime.now()));
     listUser.assignAll(
       Global()
           .filterPagination(start.value, end.value, listUserAll)
           .toList()
           .map((e) => e as UserModel),
     );
+     
     await Future.delayed(Duration(seconds: 1));
     isLoading.value = false;
   }
@@ -172,6 +178,7 @@ class UserController extends GetxController {
             .toList()
             .map((e) => e as UserModel),
       );
+       listUser.sort((a, b) => (b.createdAt??DateTime.now()).compareTo(a.createdAt??DateTime.now()));
       isSearch.value = true;
       await Future.delayed(Duration(seconds: 1));
       isLoading.value = false;
@@ -214,10 +221,12 @@ class UserController extends GetxController {
         start.value = start.value - documentLimit.value;
       }
     }
+    listUser.sort((a, b) => (b.createdAt??DateTime.now()).compareTo(a.createdAt??DateTime.now()));
     listUser.assignAll(Global()
         .filterPagination(start.value, end.value, listUserSearchAll)
         .toList()
         .map((e) => e as UserModel));
+         
 
     ;
   }
@@ -313,143 +322,199 @@ class UserController extends GetxController {
   createBroadcastDialog(BuildContext context) {
     RxString selectedTabs = "all".obs;
     RxList<UserModel> listSelectedUser = RxList();
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (_) {
-        return AlertDialog(
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (var contentTabs in listTabs)
-                  Obx(
-                    () => InkWell(
-                      onTap: () {
-                        selectedTabs.value = contentTabs;
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(right: 10),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: selectedTabs.value == contentTabs
-                              ? primaryColor
-                              : Colors.white,
-                          border: Border.all(
-                            color: Colors.red[500]!,
+      transitionDuration: const Duration(milliseconds: 450),
+      transitionBuilder: (context, a1, a2, widget) {
+        return ScaleTransition(
+          scale: Tween(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                  parent: a1,
+                  curve: const ElasticOutCurve(.8),
+                  reverseCurve: Curves.easeInCubic)),
+          child: FadeTransition(
+            opacity: Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+                parent: a1, curve: Curves.easeOutBack, reverseCurve: Curves.easeInCubic)),
+            child: widget),
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Stack(
+          children: [
+            GestureDetector(
+          onTap: (){
+            Navigator.pop(context);
+          },
+          child: Container(
+            color: Colors.black26,
+            width: double.infinity,height: double.infinity,),
+        ),
+            Align(
+                    alignment: Alignment.center,
+                  child: Material(
+              color: Colors.transparent,
+                    child: Container(
+                      decoration: BoxDecoration(
+                      color: Colors.white,
+                        borderRadius: BorderRadius.circular(8)
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      width: MediaQuery.of(context).size.width*.5,
+                      height: MediaQuery.of(context).size.height*.7,
+                                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (var contentTabs in listTabs)
+                            Obx(
+                              () => InkWell(
+                                onTap: () {
+                                  selectedTabs.value = contentTabs;
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: selectedTabs.value == contentTabs
+                                        ? primaryColor
+                                        : Colors.white,
+                                    border: Border.all(
+                                      color: Colors.red[500]!,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    contentTabs.capitalizeFirst ?? "",
+                                  ),
+                                ),
+                              ),
+                            )
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      multipleChoiceUserWidget(selectedTabs, listSelectedUser),
+                      SizedBox(height: 15),
+                      Row(
+                        children: [
+                          Text(
+                            "Title",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      CustomDropDownWidget(
+                        withSearch: true,
+                        // valueVinculo: true,
+                        title: 'Title',
+                        maxLines: null,
+                        value: valueTitle,
+                        onChange: (Vinculo value){
+                          valueTitle=value;
+                          content?.text=value.value;
+                          update();
+                        },
+                        textEditingController: title!,
+                        lista: vinculoList,
+                      ),
+                      // TextField(
+                      //   controller: title,
+                      //   style: TextStyle(fontSize: 20),
+                      //   maxLines: 1,
+                      //   decoration: new InputDecoration(
+                      //     border: new OutlineInputBorder(
+                      //         borderSide: new BorderSide(color: Colors.teal)),
+                      //     hintText: 'Title',
+                      //     prefixIcon: const Icon(
+                      //       Icons.title,
+                      //       color: Colors.green,
+                      //     ),
+                      //     prefixText: ' ',
+                      //     // suffixText: 'USD',
+                      //     suffixStyle: const TextStyle(color: Colors.green),
+                      //   ),
+                      // ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Message",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        child: Text(
-                          contentTabs.capitalizeFirst ?? "",
+                        ],
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      TextField(
+                        controller: content,
+                        style: TextStyle(fontSize: 20),
+                        maxLines: 4,
+                        decoration: new InputDecoration(
+                          border: new OutlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.teal)),
+                          hintText: '',
+                          prefixIcon: const Icon(
+                            Icons.subtitles,
+                            color: Colors.green,
+                          ),
+                          prefixText: ' ',
+                          suffixStyle: const TextStyle(color: Colors.green),
                         ),
                       ),
-                    ),
-                  )
-              ],
-            ),
-            SizedBox(height: 15),
-            multipleChoiceUserWidget(selectedTabs, listSelectedUser),
-            SizedBox(height: 15),
-            Row(
-              children: [
-                Text(
-                  "Title",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 6,
-            ),
-            TextField(
-              controller: title,
-              style: TextStyle(fontSize: 20),
-              maxLines: 1,
-              decoration: new InputDecoration(
-                border: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.teal)),
-                hintText: 'Title',
-                prefixIcon: const Icon(
-                  Icons.title,
-                  color: Colors.green,
-                ),
-                prefixText: ' ',
-                // suffixText: 'USD',
-                suffixStyle: const TextStyle(color: Colors.green),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Message",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 6,
-            ),
-            TextField(
-              controller: content,
-              style: TextStyle(fontSize: 20),
-              maxLines: 4,
-              decoration: new InputDecoration(
-                border: new OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.teal)),
-                hintText: '',
-                prefixIcon: const Icon(
-                  Icons.subtitles,
-                  color: Colors.green,
-                ),
-                prefixText: ' ',
-                suffixStyle: const TextStyle(color: Colors.green),
-              ),
-            ),
-            SizedBox(height: 15),
-            Obx(
-              () {
-                return Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(30.0),
-                  child: isLoading.value
-                      ? loadingWidget(null, null)
-                      : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 16.0),
-                            foregroundColor:
-                                Theme.of(Get.context!).primaryColor,
-                            elevation: 11,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(40.0),
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            "Send",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () async {
-                            if (selectedTabs.value != "all") {
-                              sendtoFewUsers(listSelectedUser);
-                              return;
-                            }
-                            sendtoAllUser();
-                          },
-                        ),
-                );
-              },
+                      SizedBox(height: 15),
+                      Obx(
+                        () {
+                          return Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.all(30.0),
+                            child: isLoading.value
+                                ? loadingWidget(null, null)
+                                : ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                                      foregroundColor:
+                                          Theme.of(Get.context!).primaryColor,
+                                      elevation: 11,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(40.0),
+                                        ),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      "Send",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      if (selectedTabs.value != "all") {
+                                        sendtoFewUsers(listSelectedUser);
+                                        return;
+                                      }
+                                      sendtoAllUser();
+                                    },
+                                  ),
+                          );
+                        },
+                      ),
+                    ],
+                                  ),
+                                ),
+                  ),
             ),
           ],
         );

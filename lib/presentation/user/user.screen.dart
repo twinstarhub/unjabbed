@@ -68,6 +68,9 @@ class UserScreen extends GetView<UserController> {
                         ),
                       ),
                       onPressed: () async {
+                        controller.valueTitle=null;
+                        controller.title?.text='';
+                        controller.content?.text='';
                         controller.createBroadcastDialog(Get.context!);
                       },
                     ),
