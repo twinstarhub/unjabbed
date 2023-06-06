@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:unjabbed_admin/domain/core/model/VerifyModel.dart';
 import 'package:unjabbed_admin/infrastructure/dal/services/fcm_service.dart';
+import 'package:unjabbed_admin/presentation/user/detail/vinculo_model.dart';
 
 import '../../../infrastructure/dal/util/Global.dart';
 import '../../../infrastructure/dal/util/general.dart';
+import '../../user/detail/custom_dropdown_widget.dart';
 
 class VerifyController extends GetxController {
   TextEditingController? searchctrlr;
@@ -23,6 +25,7 @@ class VerifyController extends GetxController {
   String tempQuery = "";
   RxInt start = 0.obs;
   RxInt end = 0.obs;
+  Vinculo? titleText;
 
   @override
   void onInit() {
@@ -252,26 +255,41 @@ class VerifyController extends GetxController {
       artDialogArgs: ArtDialogArgs(
         // showCancelBtn: true,
         denyButtonText: "Cancel",
-        title: "Are you sure that you would like to reject this user?",
+        title: "Are you sure that you would like to reject this user?", 
         confirmButtonText: "Submit",
         customColumns: [
           Container(
             width: 300,
-            height: 300,
+  
             padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.red)),
-            child: TextField(
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "Reason",
-                // labelText: "First Name",
-              ),
-              controller: reason,
-            ),
+            // decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(5),
+            //     border: Border.all(color: Colors.red)),
+            child: CustomDropDownWidget(
+            withSearch: true,
+            valueVinculo: true,
+            title: 'Reason',
+            maxLines: null,
+            value: titleText,
+            onChange: (Vinculo value){
+              titleText=value;
+              reason.text=value.value;
+              // controller.content?.text=value.value;
+              // controller.update();
+            },
+            textEditingController: reason,
+            lista: vinculoList,
+          ) 
+          // TextField(
+          //     keyboardType: TextInputType.multiline,
+          //     maxLines: null,
+          //     decoration: InputDecoration(
+          //       border: InputBorder.none,
+          //       hintText: "Reason",
+          //       // labelText: "First Name",
+          //     ),
+          //     controller: reason,
+          //   ),
           ),
           SizedBox(height: 50),
         ],
@@ -284,6 +302,7 @@ class VerifyController extends GetxController {
 
     if (response.isTapConfirmButton) {
       await updateStatusVerifyUser(2, idUser, reason.text);
+      titleText=null;
       ArtSweetAlert.show(
           context: Get.context!,
           artDialogArgs: ArtDialogArgs(
