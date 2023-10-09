@@ -7,6 +7,8 @@ yarn-error.log*
 firebase-debug.log*
 firebase-debug.*.log*
 
+.dart_tool/*
+
 # Firebase cache
 .firebase/
 
@@ -64,3 +66,4 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
